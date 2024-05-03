@@ -1,3 +1,5 @@
+import os
+import json
 import argparse
 import yaml
 from trainers import CustomContrastiveTrainer
@@ -20,6 +22,11 @@ def load_config_from_yaml(config_file):
 
 
 def main(config):
+
+    print("Config: ", config)
+    # Save config file
+    with open(os.path.join(config["log_dir"], "config.json"), "w") as f:
+        json.dump(config, f)
 
     bert_config = BertConfig.from_pretrained(config["model_name"])
     tokenizer = BertTokenizer.from_pretrained(config["model_name"])
@@ -59,7 +66,9 @@ def main(config):
         loss=loss,
         data_collator=data_collator,
     )
+    print("############# TRAINING STARTED #############")
     trainer.train(config["epochs"])
+    print("############# TRAINING COMPLETED ############# \n\n")
 
 
 if __name__ == "__main__":

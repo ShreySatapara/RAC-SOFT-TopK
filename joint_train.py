@@ -1,12 +1,14 @@
-import argparse
+import os
+import json
 import yaml
+import torch
+import random
+import argparse
+import numpy as np
 from transformers import BertTokenizer
 from models import RACModel
 from dataset import JointDataset2, JointDataCollator
 from trainers import CustomJointTrainer
-import torch
-import random
-import numpy as np
 
 
 def load_config_from_yaml(config_file):
@@ -21,7 +23,11 @@ def main(config):
     np.random.seed(config["seed"])
     torch.manual_seed(config["seed"])
 
-    print(config)
+    print("Config: ", config)
+    # Save config file
+    with open(os.path.join(config["log_dir"], "config.json"), "w") as f:
+        json.dump(config, f)
+
     model_config = argparse.Namespace(**config["model"])
     model = RACModel(config=model_config)
     tokenizer_classifier = BertTokenizer.from_pretrained(
