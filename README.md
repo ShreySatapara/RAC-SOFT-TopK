@@ -20,6 +20,10 @@ git clone <repository-name>
 conda env create -f environment.yml
 ```
 
+### Dataset 
+
+Data used for training can be found [here](https://gitlab.com/checkthat_lab/clef2024-checkthat-lab/-/tree/main/task5/data)
+
 ### Training Procedure
 
 > **For independent training.**
