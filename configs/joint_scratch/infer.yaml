@@ -8,6 +8,6 @@ data_file: ./data/main/English_dev.json
 language: en
 max_length: 128
 top_k: 5
-meta_file: ./data/preprocessed/meta.json
+meta_file: ./meta.json
 num_labels: 3
 score_fn: maxsim

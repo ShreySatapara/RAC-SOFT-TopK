@@ -1,0 +1,12 @@
+{
+    "labels_2_ids": {
+        "refutes": 0,
+        "supports": 1,
+        "not enough info": 2
+    },
+    "ids_2_labels": {
+        "0": "refutes",
+        "1": "supports",
+        "2": "not enough info"
+    }
+}
