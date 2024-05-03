@@ -25,6 +25,7 @@ def main(config):
 
     print("Config: ", config)
     # Save config file
+    os.makedirs(config["log_dir"], exist_ok=True)
     with open(os.path.join(config["log_dir"], "config.json"), "w") as f:
         json.dump(config, f)
 

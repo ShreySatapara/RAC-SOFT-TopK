@@ -11,8 +11,8 @@ max_grad_norm: 1.0
 device: cuda
 distributed: false
 patience: 3
-log_dir: ./logs/test7/
-epochs: 6
+log_dir: ./logs/test9/
+epochs: 4
 num_labels: 3
 doc_size: 64
 seed: 42

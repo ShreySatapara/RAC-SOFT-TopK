@@ -1,9 +1,9 @@
-exp_name: test7
+exp_name: test9
 model_name: bert-base-uncased
-retriever_path: ./logs/test7/checkpoints/retriever
-classifier_path: ./logs/test7/checkpoints/classifier
-output_file_retriever: ./results/test7.txt
-output_file_classifier: ./results/test7.json
+retriever_path: ./logs/test9/checkpoints/retriever
+classifier_path: ./logs/test9/checkpoints/classifier
+output_file_retriever: ./results/test9.txt
+output_file_classifier: ./results/test9.json
 data_file: ./data/main/English_dev.json
 language: en
 max_length: 128
