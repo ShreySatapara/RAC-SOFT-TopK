@@ -57,7 +57,7 @@ class RACModel(nn.Module):
         self.classifier = BertForSequenceClassification.from_pretrained(
             classifier_path, num_labels=config.num_labels
         )
-        self.classifier_embeddings = self.classifier.bert.get_input_embeddings()
+        self.classifier_embeddings = self.classifier.bert.embeddings
 
         # SOFT TOPK
         self.soft_topk = SoftTopK(config.retriever_count, epsilon=config.soft_k_epsilon)
@@ -96,14 +96,10 @@ class RACModel(nn.Module):
     def classify(self, query_docs, soft_A):
         B, T = query_docs["input_ids"].shape
         embeddings = self.classifier_embeddings(query_docs["input_ids"])
-        # print("Embeddings", embeddings)
         embeddings = embeddings.unsqueeze(0)
         embeddings = soft_A.permute(0, 2, 1).matmul(embeddings.permute(0, 2, 1, 3))
         embeddings = embeddings.permute(0, 2, 1, 3)
         embeddings = embeddings.squeeze(0)
-        query_docs["inputs_embeds"] = embeddings
-        del query_docs["input_ids"]
-        # print(query_docs["token_type_ids"])
         outputs = self.classifier(
             input_ids=None,
             inputs_embeds=embeddings,

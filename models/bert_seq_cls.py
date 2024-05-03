@@ -255,16 +255,16 @@ class BertModel(BertPreTrainedModel):
         head_mask = self.get_head_mask(head_mask, self.config.num_hidden_layers)
 
         # NOTE: Change made here!!
-        # if inputs_embeds is None:
-        embedding_output = self.embeddings(
-            input_ids=input_ids,
-            position_ids=position_ids,
-            token_type_ids=token_type_ids,
-            inputs_embeds=inputs_embeds,
-            past_key_values_length=past_key_values_length,
-        )
-        # else:
-        #     embedding_output = inputs_embeds
+        if inputs_embeds is None:
+            embedding_output = self.embeddings(
+                input_ids=input_ids,
+                position_ids=position_ids,
+                token_type_ids=token_type_ids,
+                inputs_embeds=inputs_embeds,
+                past_key_values_length=past_key_values_length,
+            )
+        else:
+            embedding_output = inputs_embeds
 
         encoder_outputs = self.encoder(
             embedding_output,
