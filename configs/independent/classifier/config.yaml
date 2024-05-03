@@ -1,0 +1,16 @@
+model_name: bert-base-uncased #colbert-ir/colbertv2.0    #bert-base-uncased
+language: en
+task: classification
+train_file: ./data/train_data/English_train_data.json
+eval_file: ./data/train_data/English_val_data.json
+max_seq_length: 128
+margin: 0.5
+batch_size: 1
+lr: 0.001
+max_grad_norm: 1.0
+device: cuda
+distributed: false
+patience: 5
+log_dir: ./logs/classification_bert/
+epochs: 5
+num_labels: 3

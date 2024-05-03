@@ -1,0 +1,30 @@
+model_name: bert-base-uncased
+language: en
+task: contrastive
+train_file: ./data/preprocessed/English_train.json
+eval_file: ./data/preprocessed/English_dev.json
+max_seq_length: 128
+margin: 0.5
+batch_size: 1
+lr: 0.00001
+max_grad_norm: 1.0
+device: cuda
+distributed: false
+patience: 5
+log_dir: ./logs/joint/
+epochs: 1
+num_labels: 2
+doc_size: 64
+model:
+  num_labels: 3
+  bert_model_name: bert-base-uncased
+  max_length: 356
+  retriever_path: None
+  classifier_path: None
+  retriever_count: 5
+  epsilon: 0.00000008
+  score_fn: l2
+  freeze_retriever: False
+  freeze_classifier: False
+  device: cuda
+  soft_k_epsilon: 0.01

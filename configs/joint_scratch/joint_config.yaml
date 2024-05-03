@@ -1,0 +1,32 @@
+model_name: colbert-bert
+language: en
+task: joint-training
+train_file: ./data/train_data/English_train_data.json
+eval_file: ./data/train_data/English_val_data.json
+max_seq_length: 128
+margin: 0.5
+batch_size: 1
+lr: 0.00001
+max_grad_norm: 1.0
+device: cuda
+distributed: false
+patience: 3
+log_dir: ./logs/test7/
+epochs: 6
+num_labels: 3
+doc_size: 64
+seed: 42
+model:
+  num_labels: 3
+  bert_model_name_retriever: colbert-ir/colbertv2.0
+  bert_model_name_classifier: colbert-ir/colbertv2.0
+  max_length: 128
+  retriever_path: ./logs/joint_maxsim_cls_trained/checkpoints/retriever
+  classifier_path: ./logs/joint_maxsim_cls_trained/checkpoints/classifier
+  retriever_count: 5
+  epsilon: 0.00000008
+  score_fn: maxsim
+  freeze_retriever: True
+  freeze_classifier: False
+  device: cuda
+  soft_k_epsilon: 0.01

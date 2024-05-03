@@ -1,0 +1,13 @@
+exp_name: independent_training
+model_name: colbert-ir/colbertv2.0
+retriever_path: None
+classifier_path: ./logs/classification_best/checkpoints
+output_file_retriever: ./results/retriever_colbert_3.txt
+output_file_classifier: ./results/classifier_bert_3.json
+data_file: /raid/srijith/sayanta/projects/rumour_detection/nlp_project/data/main/English_dev.json
+language: en
+max_length: 128
+top_k: 5
+meta_file: ./data/preprocessed/meta.json
+num_labels: 3
+score_fn: cosine
