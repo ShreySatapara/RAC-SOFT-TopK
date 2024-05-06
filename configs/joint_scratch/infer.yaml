@@ -1,10 +1,10 @@
-exp_name: test9
+exp_name: en_rac_softk
 model_name: bert-base-uncased
-retriever_path: ./logs/test9/checkpoints/retriever
-classifier_path: ./logs/test9/checkpoints/classifier
-output_file_retriever: ./results/test9.txt
-output_file_classifier: ./results/test9.json
-data_file: ./data/main/English_dev.json
+retriever_path: ./logs/joint_maxsim_freeze_retri_train_cls/checkpoints/retriever
+classifier_path: ./logs/joint_maxsim_freeze_retri_train_cls/checkpoints/classifier
+output_file_retriever: ./results/en/en_rac_softk.txt
+output_file_classifier: ./results/en/en_rac_softk.json
+data_file: ./data/main/English_test.json
 language: en
 max_length: 128
 top_k: 5

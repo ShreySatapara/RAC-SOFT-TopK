@@ -1,5 +1,8 @@
 import os
 import json
+import random
+import numpy as np
+import torch
 import argparse
 import yaml
 from trainers import CustomClassifierTrainer
@@ -14,6 +17,10 @@ def load_config_from_yaml(config_file):
 
 
 def main(config):
+    # Set random seed
+    random.seed(config["seed"])
+    np.random.seed(config["seed"])
+    torch.manual_seed(config["seed"])
 
     print("Config: ", config)
     # Save config file

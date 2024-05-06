@@ -4,6 +4,7 @@ from transformers import BertTokenizer, BertModel, BertForSequenceClassification
 import yaml
 from models.scores import *
 from inference import Inference
+import jsonlines
 
 SCORE_DICT = {
     "cosine": CosineScores,
@@ -33,11 +34,13 @@ def main(configs):
     )
     scorer = SCORE_DICT[configs["score_fn"]]()
 
-    data = json.load(open(configs["data_file"]))
+    # data = json.load(open(configs["data_file"]))
+    with jsonlines.open(configs["data_file"]) as reader:
+        data = list(reader)
 
     inference = Inference(retriever, classifier, scorer, tokenizer, args)
     print("############# INFERENCE STARTED #############")
-    inference.infer_classifier(data)
+    inference.infer_classifier_2(data)
     print("############# INFERENCE COMPLETED ############# \n\n")
 
 

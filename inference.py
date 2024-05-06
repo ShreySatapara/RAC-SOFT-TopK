@@ -4,6 +4,7 @@ import numpy as np
 import torch
 import yaml
 from tqdm import tqdm
+import jsonlines
 
 from transformers import BertTokenizer, BertForSequenceClassification, BertModel
 from models.scores import *
@@ -82,11 +83,15 @@ class Inference:
                 scores_list = torch.cat(scores_list, dim=1)
                 scores_list = scores_list.cpu()
                 # get top k scores and their corresponding tweet ids
-                top_k_scores, top_k_indices = torch.topk(
-                    scores_list, self.configs.top_k
-                )
-                top_k_scores = top_k_scores.numpy().squeeze().tolist()
-                top_k_indices = top_k_indices.numpy().squeeze().tolist()
+                if len(data_sample["timeline"]) < self.configs.top_k:
+                    top_k_scores = scores_list.squeeze().tolist()
+                    top_k_indices = list(range(len(data_sample["timeline"])))
+                else:
+                    top_k_scores, top_k_indices = torch.topk(
+                        scores_list, self.configs.top_k
+                    )
+                    top_k_scores = top_k_scores.numpy().squeeze().tolist()
+                    top_k_indices = top_k_indices.numpy().squeeze().tolist()
                 top_k_tweet_ids = []
                 for idx in top_k_indices:
                     top_k_tweet_ids.append(timeline_ids[idx])
@@ -102,14 +107,23 @@ class Inference:
                     temp = data_sample["timeline"][idx]
                     temp.append(score)
                     retrieve_tweets_with_scores.append(temp)
-            data_retrieve_tweets_with_scores.append(
-                {
-                    "id": data_sample["id"],
-                    "claim": data_sample["rumor"],
-                    "label": data_sample["label"],
-                    "predicted_evidence": retrieve_tweets_with_scores,
-                }
-            )
+            if data_sample.pop("label", None):
+                data_retrieve_tweets_with_scores.append(
+                    {
+                        "id": data_sample["id"],
+                        "claim": data_sample["rumor"],
+                        "label": data_sample["label"],
+                        "predicted_evidence": retrieve_tweets_with_scores,
+                    }
+                )
+            else:
+                data_retrieve_tweets_with_scores.append(
+                    {
+                        "id": data_sample["id"],
+                        "claim": data_sample["rumor"],
+                        "predicted_evidence": retrieve_tweets_with_scores,
+                    }
+                )
         if to_save:
             output_file.close()
 
@@ -170,42 +184,41 @@ class Inference:
                 data_sample["claim"], language=self.configs.language
             )
             res = []
-            doc = ""
+            tot_score = 0
             for doc_repo in data_sample["predicted_evidence"]:
-                doc += " " + preprocess_tweet(
-                    doc_repo[2], language=self.configs.language
-                )
-            # print(doc)
-            query_doc = query + sep_token + doc
-            query_doc = self.tokenizer(
-                query_doc,
-                return_tensors="pt",
-                padding="max_length",
-                truncation=True,
-                max_length=512,
-            ).to(self.device)
-            outputs = self.classifier(**query_doc)["logits"].cpu().squeeze()
-            res = outputs.numpy()
-            # res.append(doc_repo[-1] * outputs.numpy())
-            # tot_score += doc_repo[-1]
-            # res = np.array(res) / tot_score
-            # res = res.sum(axis=0)
+                doc = preprocess_tweet(doc_repo[2], language=self.configs.language)
+                query_doc = query + sep_token + doc
+                query_doc = self.tokenizer(
+                    query_doc,
+                    return_tensors="pt",
+                    padding="max_length",
+                    truncation=True,
+                    max_length=self.configs.max_length,
+                ).to(self.device)
+                outputs = self.classifier(**query_doc)["logits"].cpu().squeeze()
+                res.append(doc_repo[-1] * outputs.numpy())
+                tot_score += doc_repo[-1]
+            res = np.array(res) / tot_score
+            res = res.mean(axis=0)
             res = np.argmax(res)
             classified_data.append(
                 {
                     "id": data_sample["id"],
                     "predicted_label": meta_info[str(res)].upper(),
-                    "claim": data_sample["claim"],
-                    "label": data_sample["label"],
+                    # "claim": data_sample["claim"],
+                    # "label": data_sample["label"],
                     "predicted_evidence": data_sample["predicted_evidence"],
                 }
             )
         os.makedirs(os.path.dirname(self.configs.output_file_classifier), exist_ok=True)
-        json.dump(
-            classified_data,
-            open(self.configs.output_file_classifier, "w"),
-            ensure_ascii=False,
-        )
+        # json.dump(
+        #     classified_data,
+        #     open(self.configs.output_file_classifier, "w"),
+        #     ensure_ascii=False,
+        # )
+        with jsonlines.open(self.configs.output_file_classifier, "w") as writer:
+            for item in classified_data:
+                writer.write(item)
 
 
 if __name__ == "__main__":
