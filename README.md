@@ -1,4 +1,4 @@
-# Retriever-Augumented Classification for Rumour Verification using Evidence from Authorities
+# Retriever Augmented Classification using Differentiable Top-K Operator for Rumor Verification based on Evidence from Authorities
 
 A code for implementing Retriver Augumented Classification using differential SOFT-TopK to perform a joint training of Retriever and Classifier.
 
