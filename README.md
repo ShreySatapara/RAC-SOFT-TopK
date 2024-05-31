@@ -5,7 +5,7 @@ A code for implementing Retriver Augumented Classification using differential SO
 ### System Describtion
 
 - Ubuntu 18.04.1 LTS
-- Nvidia Tesla V100
+- Nvidia TESLA 32GB V100
 - Python 3.10.13
 
 ### Environment Description
