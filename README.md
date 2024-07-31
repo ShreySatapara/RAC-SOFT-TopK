@@ -80,6 +80,7 @@ bash scripts/evaluate_verification.sh
 
 ---
 
+```
 @InProceedings{clef-checkthat:2024:task5:DEFAULT,
 	author = {
 		Adhikari, Sayanta
@@ -90,4 +91,5 @@ bash scripts/evaluate_verification.sh
 	title = {{DEFAULT} at {CheckThat!} 2024: {R}etrieval {A}ugmented {C}lassification using {D}ifferentiable {T}op-K {O}perator for {R}umor {V}erification based on {E}vidence from {A}uthorities},
 	crossref = {clef2024-workingnotes}
 }
+```
 ---
